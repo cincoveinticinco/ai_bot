@@ -1,0 +1,273 @@
+[
+    {
+        "question": "Total episodios",
+        "json_object": {"entities":[
+            {
+                "type":"scn",
+                "metrics":[{"name":"count_ep"}],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Total libretos",
+        "json_object": {"entities":[
+            {
+                "type":"scn",
+                "metrics":[{"name":"count_ep"}],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Total escenas",
+        "json_object": {"entities":[
+            {
+                "type":"scn",
+                "metrics":[{"name":"count_scn"}],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Total escenas en exterior",
+        "json_object": {"entities":[
+            {
+                "type":"scn",
+                "metrics":[{"name":"count_scn"}],
+                "children":[],
+                "filters":[
+                    {"field":"ie", "op":"in", "values":["EXT"], "negate":false}
+                ]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Porcentaje escenas en interior",
+        "json_object": {"entities":[
+            {
+                "type":"scn",
+                "metrics":[{"name":"pct_scn"}],
+                "children":[],
+                "filters":[
+                    {"field":"ie", "op":"in", "values":["INT"], "negate":false}
+                ]
+            }
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Porcentaje páginas día",
+        "json_object": {"entities":[
+            {
+                "type":"scn",
+                "metrics":[{"name":"pct_pg"}],
+                "children":[],
+                "filters":[
+                    {"field":"dn", "op":"in", "values":["DAY"], "negate":false}
+                ]
+            }
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Porcentaje participación Dan",
+        "json_object": {"entities":[
+            {
+                "type":"scn",
+                "metrics":[{"name":"pct_scn"}],
+                "children":[],
+                "filters":[
+                    {"field":"cast", "op":"in", "values":["Dan"], "negate":false}
+                ]
+            }
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Total páginas",
+        "json_object": {"entities":[
+            {
+                "type":"scn",
+                "metrics":[{"name":"sum_pg"}],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Total octavos",
+        "json_object": {"entities":[
+            {
+                "type":"scn",
+                "metrics":[{"name":"sum_pg"}],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Total minutos estimados",
+        "json_object": {"entities":[
+            {
+                "type":"scn",
+                "metrics":[{"name":"sum_est"}],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Total tiempo estimados",
+        "json_object": {"entities":[
+            {
+                "type":"scn",
+                "metrics":[{"name":"sum_est"}],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Total tiempo desglose",
+        "json_object": {"entities":[
+            {
+                "type":"scn",
+                "metrics":[{"name":"sum_est"}],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Total minutos grabados",
+        "json_object": {"entities":[
+            {
+                "type":"scn",
+                "metrics":[{"name":"sum_mshot"}],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Total minutos producidos",
+        "json_object": {"entities":[
+            {
+                "type":"scn",
+                "metrics":[{"name":"sum_mshot"}],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Total minutos efectivos",
+        "json_object": {"entities":[
+            {
+                "type":"scn",
+                "metrics":[{"name":"sum_mshot"}],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Lista de episodios",
+        "json_object": {"entities":[
+            {
+                "type":"ep",
+                "metrics":[],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Lista de escenas en exterior",
+        "json_object": {"entities":[
+            {
+                "type":"scn",
+                "metrics":[],
+                "children":[],
+                "filters":[{"field":"ie", "values":["EXT"], "negate":false}]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Lista de personajes",
+        "json_object": {"entities":[
+            {
+                "type":"cast",
+                "metrics":[],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Lista de locaciones",
+        "json_object": {"entities":[
+            {
+                "type":"loc",
+                "metrics":[],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Lista de sets",
+        "json_object": {"entities":[
+            {
+                "type":"set",
+                "metrics":[],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Lista de elementos",
+        "json_object": {"entities":[
+            {
+                "type":"el",
+                "metrics":[],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Lista de categorias de elementos",
+        "json_object": {"entities":[
+            {
+                "type":"cat",
+                "metrics":[],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question": "Lista de categorias de personajes",
+        "json_object": {"entities":[
+            {
+                "type":"role",
+                "metrics":[],
+                "children":[],
+                "filters":[]}
+        ], "clarifications":[]}
+    },
+    {
+        "question":"Cuantas escenas tiene barbara en el episodio 1",
+        "json_object":{
+            "entities":[
+                {
+                    "type":"cast",
+                    "metrics":[
+                        {"name":"count_scn"}
+                    ],
+                    "children":[
+                        {
+                            "type":"ep",
+                            "metrics":[
+                                {"name":"count_scn"}
+                            ],
+                            "children":[],
+                            "filters":[
+                                {"field":"ep", "op":"in", "values":["1"], "negate":false}
+                            ]
+                        }
+                    ],
+                    "filters":[
+                        {"field":"cast", "op":"contains", "values":["barbara"], "negate":false}
+                    ]
+                }
+            ],
+            "clarifications":[]
+        }
+    }
+]
+    

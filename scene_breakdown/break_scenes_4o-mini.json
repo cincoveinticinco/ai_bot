@@ -1,0 +1,80 @@
+[
+  {
+    "scn": "13",
+    "i/e": "INT",
+    "set": "DEPARTAMENTO GUSTAVO > SALA",
+    "d/n": "DAY",
+    "sd": "DAY 7",
+    "yr": "NULL",
+    "cast": [
+      "GUSTAVO",
+      "ALEJANDRO"
+    ],
+    "extras": [],
+    "el": [],
+    "sub_scenes": [],
+    "synopsis": "GUSTAVO y ALEJANDRO tienen una conversación tensa tras un encuentro con la esposa de ALEJANDRO. Discuten sobre sus sentimientos y la posibilidad de una relación complicada, mientras ALEJANDRO se prepara para irse a hablar con Rosa."
+  },
+  {
+    "scn": "14",
+    "i/e": "INT",
+    "set": "HOSPITAL > PASILLOS",
+    "d/n": "DAY",
+    "sd": "DAY 7",
+    "yr": "NULL",
+    "cast": [
+      "LORENA",
+      "MACA"
+    ],
+    "extras": [
+      "ENFERMERAS (2)",
+      "PERSONAL DEL HOSPITAL"
+    ],
+    "el": [
+      {
+        "cat": "PROPS",
+        "items": [
+          "caja"
+        ]
+      }
+    ],
+    "sub_scenes": [],
+    "synopsis": "Maca camina por los pasillos del hospital, cargando una caja con sus cosas, escoltada por dos guardias y acompañada por Lorena. Mientras conversan sobre la situación de Victoria y los dilemas morales que enfrentan, el personal del hospital observa con pesar."
+  },
+  {
+    "scn": "15",
+    "i/e": "EXT",
+    "set": "CANCHA PÁDEL",
+    "d/n": "DAY",
+    "sd": "DÍA 7",
+    "yr": "NULL",
+    "cast": [
+      "EMILIO",
+      "MACA",
+      "RICARDO",
+      "YOLANDA",
+      "SERGIO",
+      "ADELA"
+    ],
+    "extras": [
+      "JUGADORES (VARIOS)"
+    ],
+    "el": [
+      {
+        "cat": "PROPS",
+        "items": [
+          "raqueta",
+          "pelota"
+        ]
+      }
+    ],
+    "sub_scenes": [
+      "FLASHBACK CAP. 102, ESC. 4",
+      "FLASHBACK CAP. 104, ESC. 24",
+      "FLASHBACK CAP. 105, ESC. 7",
+      "FLASHBACK CAP. 106, ESC. 10",
+      "FLASHBACK CAP. 106, ESC. 18"
+    ],
+    "synopsis": "Emilio juega un solo de pádel, drenando su energía mientras es atormentado por flashbacks de su pasado. Al finalizar, grita y destruye su raqueta, dejando a los demás jugadores sorprendidos."
+  }
+]

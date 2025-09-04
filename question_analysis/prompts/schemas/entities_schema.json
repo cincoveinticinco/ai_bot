@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EntityMetricsTreeV1",
+  "type": "object",
+  "required": [
+    "entities",
+    "clarifications"
+  ],
+  "properties": {
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Entity"
+      }
+    },
+    "clarifications": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "Filter": {
+      "type": "object",
+      "required": [
+        "field",
+        "op",
+        "values",
+        "negate"
+      ],
+      "properties": {
+        "field": {
+          "enum": [
+            "ep",
+            "scn",
+            "ie",
+            "dn",
+            "loc",
+            "set",
+            "ty",
+            "typ",
+            "st",
+            "cast",
+            "role",
+            "el",
+            "cat",
+            "pg",
+            "dt",
+            "est",
+            "syn",
+            "dlg"
+          ]
+        },
+        "op": {
+          "enum": [
+            "eq",
+            "in",
+            "neq",
+            "nin",
+            "contains",
+            "ncontains",
+            "regex",
+            "gte",
+            "lte",
+            "gt",
+            "lt",
+            "between",
+            "is_null",
+            "not_null"
+          ]
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "negate": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Metric": {
+      "type": "object",
+      "required": [
+        "name",
+        "filters"
+      ],
+      "properties": {
+        "name": {
+          "enum": [
+            "count_ep",
+            "count_scn",
+            "count_ie",
+            "count_dn",
+            "count_loc",
+            "count_set",
+            "count_ty",
+            "count_typ",
+            "count_st",
+            "count_cast",
+            "count_role",
+            "count_el",
+            "count_cat",
+            "sum_pg",
+            "sum_est",
+            "min_dt",
+            "max_dt",
+            "min_scn",
+            "max_scn",
+            "min_pg",
+            "max_pg",
+            "min_ep",
+            "max_ep",
+            "pct_project_count_ep",
+            "pct_project_count_scn",
+            "pct_project_count_ie",
+            "pct_project_count_dn",
+            "pct_project_count_loc",
+            "pct_project_count_set",
+            "pct_project_count_ty",
+            "pct_project_count_typ",
+            "pct_project_count_st",
+            "pct_project_count_cast",
+            "pct_project_count_role",
+            "pct_project_count_el",
+            "pct_project_count_cat",
+            "pct_project_sum_pg",
+            "pct_project_sum_est",
+            "pct_parent_count_ep",
+            "pct_parent_count_scn",
+            "pct_parent_count_ie",
+            "pct_parent_count_dn",
+            "pct_parent_count_loc",
+            "pct_parent_count_set",
+            "pct_parent_count_ty",
+            "pct_parent_count_typ",
+            "pct_parent_count_st",
+            "pct_parent_count_cast",
+            "pct_parent_count_role",
+            "pct_parent_count_el",
+            "pct_parent_count_cat",
+            "pct_parent_sum_pg",
+            "pct_parent_sum_est"
+          ]
+        },
+        "filters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Filter"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Entity": {
+      "type": "object",
+      "required": [
+        "type",
+        "metrics",
+        "children",
+        "filters"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "ep",
+            "scn",
+            "ie",
+            "dn",
+            "loc",
+            "set",
+            "ty",
+            "typ",
+            "st",
+            "cast",
+            "role",
+            "el",
+            "cat",
+            "pg",
+            "dt",
+            "est",
+            "syn",
+            "dlg"
+          ]
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Metric"
+          }
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Entity"
+          }
+        },
+        "filters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Filter"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

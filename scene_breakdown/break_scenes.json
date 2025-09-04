@@ -1,0 +1,95 @@
+[
+  {
+    "scn": "13",
+    "i/e": "INTERIOR",
+    "set": "DEPARTAMENTO GUSTAVO > SALA",
+    "d/n": "DAY",
+    "sd": "DÍA 7",
+    "yr": "NULL",
+    "cast": [
+      "ALEJANDRO",
+      "GUSTAVO"
+    ],
+    "extras": [],
+    "el": [],
+    "sub_scenes": [],
+    "synopsis": "Alejandro y Gustavo, aún afectados tras el encuentro con la esposa de Alejandro, discuten sobre su relación y el futuro. Gustavo cuestiona a Alejandro sobre sus sentimientos y planes, mientras Alejandro evita responder y finalmente se despide para ir a hablar con Rosa."
+  },
+  {
+    "scn": "14",
+    "i/e": "INT",
+    "set": "HOSPITAL > PASILLOS",
+    "d/n": "DAY",
+    "sd": "DÍA 7",
+    "yr": "NULL",
+    "cast": [
+      "MACA",
+      "LORENA"
+    ],
+    "extras": [
+      "GUARDIAS (2)",
+      "ENFERMERAS (2)",
+      "PERSONAL DEL HOSPITAL"
+    ],
+    "el": [
+      {
+        "cat": "PROPS",
+        "items": [
+          "CAJA CON COSAS MACA",
+          "CAJA CON COSAS LORENA"
+        ]
+      },
+      {
+        "cat": "SET DRESSING",
+        "items": [
+          "PASILLOS DE HOSPITAL"
+        ]
+      }
+    ],
+    "sub_scenes": [],
+    "synopsis": "Maca y Lorena caminan por los pasillos del hospital, escoltadas por dos guardias y cargando cajas con sus pertenencias, mientras el personal observa y algunas enfermeras se despiden. Las amigas conversan en voz baja sobre la situación de Victoria, Julieta y María, y la posibilidad de un diagnóstico falso."
+  },
+  {
+    "scn": "15",
+    "i/e": "EXT",
+    "set": "CANCHA PÁDEL",
+    "d/n": "DAY",
+    "sd": "DÍA 7",
+    "yr": "NULL",
+    "cast": [
+      "EMILIO"
+    ],
+    "extras": [
+      "JUGADORES (indeterminado)"
+    ],
+    "el": [
+      {
+        "cat": "PROPS",
+        "items": [
+          "raqueta de pádel",
+          "pelota de pádel"
+        ]
+      },
+      {
+        "cat": "SFX",
+        "items": [
+          "raqueta hecha pedazos"
+        ]
+      },
+      {
+        "cat": "SET DRESSING",
+        "items": [
+          "pared de cancha de pádel"
+        ]
+      }
+    ],
+    "sub_scenes": [
+      "FLASHBACK CAP. 102, ESC. 4",
+      "FLASHBACK CAP. 104, ESC. 24",
+      "FLASHBACK CAP. 105, ESC. 7",
+      "FLASHBACK CAP. 106, ESC. 10",
+      "FLASHBACK CAP. 106, ESC. 18"
+    ],
+    "synopsis": "Emilio, sudado y agobiado, juega solo en la cancha de pádel mientras lo invaden flashbacks dolorosos. Al final, rompe su raqueta contra el piso ante la mirada de otros jugadores y queda recostado, exhausto y perturbado."
+  }
+]
