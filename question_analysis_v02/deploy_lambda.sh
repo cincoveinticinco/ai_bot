@@ -9,8 +9,8 @@ HANDLER="analyze_question.lambda_handler"
 
 # ✅ Verificar que el ZIP exista, si no, ejecutar build
 if [ ! -f "$ZIP_FILE" ]; then
-  echo "📦 No se encontró $ZIP_FILE. Ejecutando build_lambda.sh..."
-  ./build_lambda.sh
+  echo "📦 No se encontró $ZIP_FILE. Ejecutando build_zip.sh..."
+  ./build_zip.sh
   if [ $? -ne 0 ]; then
     echo "❌ Falló la generación del ZIP. Abortando."
     exit 1

@@ -36,6 +36,7 @@ def first_page_text(pdf_path: str, n_chars: int = 300) -> str:
         return text[:n_chars].replace("\n", " ")
 
 def iter_pages_lines(pdf_path: str) -> Iterator[Dict[str, Any]]:
+    print("=====ACA EXTRAE EL TEXTO DE CADA PÁGINA======")
     """
     Devuelve por página una lista de 'líneas' ordenadas.
     Cada línea: {text, origin_x, origin_y, end_x, size, font, bbox}
@@ -121,6 +122,16 @@ def group_lines_to_paragraphs(
             "right_x": L["end_x"],
             "lines_count": 1,
         }
+    
+    def _is_bold(font: str) -> bool:
+        """
+        Detecta heurísticamente si el nombre de la fuente indica estilo negrita.
+        Busca tokens comunes en el nombre de la fuente (bold, black, demi, bd, bf, blk).
+        """
+        if not font:
+            return False
+        fname = font.lower()
+        return bool(re.search(r"\b(bold|black|demi|bd|bf|blk)\b", fname))
 
     cur = new_para_from_line(lines[0])
     prev = lines[0]
@@ -129,6 +140,8 @@ def group_lines_to_paragraphs(
         dy = L["origin_y"] - prev["origin_y"]
         d_indent = abs(L["origin_x"] - prev["origin_x"])
         prev_ends_sentence = prev["text"].rstrip().endswith((".", "!", "?"))
+        
+        change_line_style = _is_bold(L["font"]) != _is_bold(prev["font"])
 
         should_break = False
         if dy > y_gap_threshold:
@@ -136,6 +149,8 @@ def group_lines_to_paragraphs(
         elif d_indent > indent_threshold and dy > (y_gap_threshold * 0.5):
             should_break = True
         elif prev_ends_sentence and dy > (y_gap_threshold * 0.8):
+            should_break = True
+        elif change_line_style:
             should_break = True
 
         if should_break:

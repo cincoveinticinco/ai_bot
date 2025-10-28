@@ -8,3 +8,9 @@ __pycache__/
 *.env.*
 .venv/
 test_env/
+scene_breakdown/responses/
+lambda_build/
+.zip
+.zip.*
+*.zip
+*.zip.*

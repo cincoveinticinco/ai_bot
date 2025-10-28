@@ -1,11 +1,8 @@
 # Ejecuta OpenAI con prompt + question; adjunta instrucciones + schema como texto
-import json
-import os
-import re
-import time
+
 from dotenv import load_dotenv
 from openai import OpenAI
-import openai, sys
+import openai, sys, json, time, os, re
 
 # Debug de versión en runtime
 print("openai version:", openai.__version__, "python:", sys.version)
@@ -13,8 +10,9 @@ print("openai version:", openai.__version__, "python:", sys.version)
 # Cargar variables desde .env
 load_dotenv()
 
-MODEL_DEFAULT = os.getenv("MODEL_TO_USE", "gpt-4o-mini")
-# MODEL_DEFAULT = os.getenv("MODEL_TO_USE", "gpt-4.1")
+# MODEL_DEFAULT = os.getenv("MODEL_TO_USE", "gpt-4o-mini")
+MODEL_DEFAULT = os.getenv("MODEL_TO_USE", "gpt-4.1")
+# MODEL_DEFAULT = os.getenv("MODEL_TO_USE", "gpt-5")
 LANG_DEFAULT = os.getenv("PROMPT_LANG", "es")
 
 def lambda_handler(event, context):
@@ -38,7 +36,7 @@ def lambda_handler(event, context):
     print(f"Modelo a usar: {model_to_use}")
     start_time = time.time()
     break_scenes = []
-    for scene in scenes[12:15]:
+    for scene in scenes:
         print("scene here")
         scene_obj = get_completion(scene, prompt_template, model=model_to_use)
         break_scenes.append(scene_obj)
@@ -47,9 +45,15 @@ def lambda_handler(event, context):
     end_time = time.time()
     elapsed_time = end_time - start_time
     # save break_scenes as json file
-    with open("break_scenes_4o-mini.json", "w", encoding="utf-8") as f:
-        json.dump(break_scenes, f, ensure_ascii=False, indent=2)
+    # with open(f"responses/break_scenes_{model_to_use}.json", "w", encoding="utf-8") as f:
+    #     json.dump(break_scenes, f, ensure_ascii=False, indent=2)
     print(f"Tiempo total para procesar {len(scenes)} escenas: {elapsed_time} segundos")
+
+    return {
+        "statusCode": 200,
+        "headers": {"Content-Type": "application/json; charset=utf-8"},
+        "body": json.dumps({"scenes": break_scenes}, ensure_ascii=False)
+    }
 def _extract_json(text: str):
     # fallback por si algún modelo llega a poner fences (no debería con JSON mode)
     m = re.search(r"```(?:json)?\s*([\s\S]*?)\s*```", text, flags=re.I)
@@ -57,12 +61,11 @@ def _extract_json(text: str):
         text = m.group(1)
     return _extract_json(text)
 
-def get_completion(scene, prompt: str, model: str = MODEL_DEFAULT, max_retries: int = 5):
+def get_completion(scene, prompt: str, model: str = MODEL_DEFAULT, max_retries: int = 3):
     """
     Llama a OpenAI con reintentos y fuerza salida JSON usando Chat Completions.
     """
-    from openai import OpenAI
-    import json, time, os, re
+    
 
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
@@ -79,17 +82,22 @@ def get_completion(scene, prompt: str, model: str = MODEL_DEFAULT, max_retries: 
 
     for attempt in range(max_retries):
         try:
-            resp = client.chat.completions.create(
+            resp = client.responses.create(
                 model=model,
-                response_format={"type": "json_object"},  # JSON mode
-                messages=[
+                input=[
                     {"role": "system", "content": prompt},
                     {"role": "user", "content": question}
                 ],
-                temperature=0,
-                max_tokens=600
             )
-            txt = resp.choices[0].message.content.strip()
+            print("=== Respuesta completa ===")
+            print(resp)
+            if len(resp.output) > 1 and hasattr(resp.output[1], "content"):
+                txt = resp.output[1].content[0].text.strip()
+            else:
+                txt = resp.output[0].content[0].text.strip()
+
+            print("=== Texto devuelto ===")
+            print(txt)
             return _extract_json(txt)  # dict
         except Exception as e:
             wait_time = 2 ** attempt

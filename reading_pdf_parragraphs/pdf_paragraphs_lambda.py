@@ -124,9 +124,16 @@ def classify_pdf_from_bytes(pdf_bytes: bytes, pages_spec: str = "", y_gap: float
     """
     Recibe PDF en bytes, clasifica párrafos con tu pipeline y devuelve lista de dicts.
     """
+    print(f"=== INICIANDO PROCESAMIENTO ===")
+    print(f"PDF bytes: {len(pdf_bytes)} bytes")
+    print(f"Pages spec: '{pages_spec}'")
+    print(f"Y gap: {y_gap}, Indent gap: {indent_gap}")
+    
     # Guardar a /tmp y usar el pipeline existente basado en ruta
     pdf_path = _save_tmp_pdf(pdf_bytes)
+    print(f"PDF guardado en: {pdf_path}")
 
+    print("Cargando modelo de clasificación...")
     model = load_model("ml/artifacts/v1")
 
     meta = doc_summary(pdf_path)
@@ -149,18 +156,25 @@ def classify_pdf_from_bytes(pdf_bytes: bytes, pages_spec: str = "", y_gap: float
                 "text": p.get("text", ""),
                 # "left_x": p.get("left_x"),
                 # "right_x": p.get("right_x"),
-                # "start_y": p.get("start_y"),
-                # "end_y": p.get("end_y"),
+                "start_y": p.get("start_y"),
+                "end_y": p.get("end_y"),
                 # "lines_count": p.get("lines_count"),
                 "label": pred["label"],
                 "proba": pred["proba"],
             })
 
+    # Find the object with the maximum end_y
+    min_obj = min(results, key=lambda p: p.get("start_y", 0), default=None)
+    max_obj = max(results, key=lambda p: p.get("end_y", 0), default=None)
+    # Find objects where end_y < start_y
+    invalid_objs = [p for p in results if p.get("end_y", 0) < p.get("start_y", 0)]
+    print("Objects where end_y < start_y:", invalid_objs)
     return results
 
 # === Lambda handler ===
 
 def lambda_handler(event, context):
+    print("=== LAMBDA HANDLER INICIADO ===")
     data = _get_payload(event)
     """
     Espera un JSON con:
@@ -174,12 +188,16 @@ def lambda_handler(event, context):
     """
     try:
         body = _extract_body(event)
+        print(f"Body extraído: {list(body.keys()) if body else 'VACÍO'}")
 
         # Parámetros
         pdf_b64 = body.get("pdf_base64")
         pages   = (body.get("pages") or "").strip()
         y_gap   = float(body.get("y_gap", 15.0))
         indent  = float(body.get("indent_gap", 12.0))
+        
+        print(f"Parámetros - Pages: '{pages}', Y_gap: {y_gap}, Indent: {indent}")
+        print(f"PDF base64 length: {len(pdf_b64) if pdf_b64 else 0}")
 
         if not pdf_b64:
             return _json_response(400, {"error": "Falta 'pdf_base64' en el body."})
@@ -216,4 +234,5 @@ if __name__ == "__main__":
             }, ensure_ascii=False)
         }
     response = lambda_handler(evt, None)
+    print("=== RESPONSE COMPLETA ===")
     print(json.dumps(response, indent=2, ensure_ascii=False))

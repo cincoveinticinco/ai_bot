@@ -1,7 +1,6 @@
-pymupdf==1.24.9
+python-dotenv>=1.0.1
 boto3==1.34.154
 PyMuPDF==1.24.9
-python-dotenv>=1.0.1
 
 # httpx>=0.27.2
 # tqdm>=4.66.4

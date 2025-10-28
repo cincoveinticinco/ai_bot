@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export AWS_REGION=us-east-1
+export API_ID=g85fx95qsk
+
+export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+export REPO=reading-pdf-paragraphs
+export FUNCTION_NAME=reading-pdf-paragraphs
 
 aws lambda get-function --function-name "${FUNCTION_NAME}" --region "${AWS_REGION}" >/dev/null 2>&1 || {
   echo "❌ La Lambda '${FUNCTION_NAME}' no existe en ${AWS_REGION}. Revisa FUNCTION_NAME."

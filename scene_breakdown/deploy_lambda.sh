@@ -1,16 +1,28 @@
 #!/bin/bash
 
 # CONFIGURACIÓN
-LAMBDA_NAME="question_analysis_lambda"
-ZIP_FILE="question_analysis_lambda.zip"
-ROLE_ARN="arn:aws:iam::<TU_ACCOUNT_ID>:role/lambda_basic_execution" # ⬅️ Reemplaza <TU_ACCOUNT_ID>
+LAMBDA_NAME="scene_breakdown"
+ZIP_FILE="${LAMBDA_NAME}.zip"
+PY_MAIN="main"
+ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+ROLE="lambda_basic_execution"
+ROLE_ARN="arn:aws:iam::$ACCOUNT_ID:role/$ROLE"
 RUNTIME="python3.11"
-HANDLER="analyze_question.lambda_handler"
+HANDLER="$PY_MAIN.lambda_handler"
+TIMEOUT=400
+# Obtener OPENAI_API_KEY desde .env
+if [ -f ".env" ]; then
+  OPENAI_API_KEY=$(grep '^OPENAI_API_KEY=' .env | cut -d '=' -f2-)
+else
+  echo "❌ Archivo .env no encontrado. Abortando."
+  exit 1
+fi
+ENV_VARS="OPENAI_API_KEY=$OPENAI_API_KEY"
 
 # ✅ Verificar que el ZIP exista, si no, ejecutar build
 if [ ! -f "$ZIP_FILE" ]; then
-  echo "📦 No se encontró $ZIP_FILE. Ejecutando build_lambda.sh..."
-  ./build_lambda.sh
+  echo "📦 No se encontró $ZIP_FILE. Ejecutando build_zip.sh..."
+  ./build_zip.sh
   if [ $? -ne 0 ]; then
     echo "❌ Falló la generación del ZIP. Abortando."
     exit 1
@@ -30,6 +42,8 @@ if [ $? -ne 0 ]; then
     --runtime "$RUNTIME" \
     --role "$ROLE_ARN" \
     --handler "$HANDLER" \
+    --timeout "$TIMEOUT" \
+    --environment "Variables={$ENV_VARS}" \
     --zip-file fileb://$(pwd)/"$ZIP_FILE"
 else
   echo "🔄 Lambda ya existe. Actualizando ZIP..."
@@ -41,7 +55,9 @@ else
   aws lambda update-function-configuration \
     --function-name "$LAMBDA_NAME" \
     --handler "$HANDLER" \
-    --runtime "$RUNTIME"
+    --runtime "$RUNTIME" \
+    --timeout "$TIMEOUT" \
+    --environment "Variables={$ENV_VARS}"
 fi
 
 # 🧹 LIMPIEZA FINAL

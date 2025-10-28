@@ -3,6 +3,31 @@ Reading PDF Paragraphs — Guía de uso y debug
 Servicio que extrae y clasifica párrafos desde un PDF (PyMuPDF) y se ejecuta como AWS Lambda empacada en Docker. Incluye ejecución local (Python), emulación del runtime de Lambda con Docker y exposición por API Gateway.
 
 ========================
+🚀 INICIO RÁPIDO
+========================
+
+1️⃣ Clonar el repositorio y navegar al directorio
+2️⃣ Ejecutar: ./run.sh start
+3️⃣ Probar: ./run.sh test
+4️⃣ Ver resultados en la terminal
+
+¡Eso es todo! El script run.sh maneja Docker automáticamente.
+
+========================
+📑 ÍNDICE
+========================
+
+• 🚀 Inicio rápido
+• 📁 Estructura del repo  
+• ⚙️ Prerrequisitos
+• 🌐 Variables de entorno
+• 🐍 Uso local (Python sin Docker)
+• 🐳 Ejecución con Docker (RECOMENDADO)
+• ☁️ Build y deploy (AWS Lambda)
+• 🧪 Testing y debugging
+• 🔧 Troubleshooting
+
+========================
 Estructura del repo
 ========================
 .
@@ -43,44 +68,47 @@ export FUNCTION_NAME=reading-pdf-paragraphs
 export API_ID=<api_id_http>
 export API_ENDPOINT="https://${API_ID}.execute-api.${AWS_REGION}.amazonaws.com"
 
+
+
 ========================
-Uso local (Python, sin Docker)
+Ejecución con Docker (RECOMENDADO)
 ========================
 
-1) Activar entorno y deps
-    source .venv/bin/activate
-    pip install -r requirements.txt
+El método más sencillo es usar el script run.sh que automatiza todo el proceso:
 
-2) Generar payload.json (PDF en base64)
+📋 Ver comandos disponibles:
+    ./run.sh help
 
-    En macOS/zsh, usa --data-binary @payload.json para evitar “argument list too long”.
+🚀 Iniciar la aplicación (construye Docker si es necesario):
+    ./run.sh start
 
-    base64 -i sample.pdf -b 0 > pdf.b64
-    jq -n --arg pdf "$(cat pdf.b64)" --arg pages "1-5" \
-    '{pdf_base64:$pdf, pages:$pages}' > payload.json
+🧪 Probar la función con payload.json:
+    ./run.sh test
 
-3) Ejecutar el handler como script
-    python pdf_paragraphs_lambda.py
+📊 Ver estado del contenedor:
+    ./run.sh status
 
+📋 Ver logs en tiempo real:
+    ./run.sh logs
 
-Alternativa: invocar la función desde Python
+🛑 Detener la aplicación:
+    ./run.sh stop
 
-    python - <<'PY'
-    import json
-    from pdf_paragraphs_lambda import lambda_handler
+🧹 Limpiar contenedor:
+    ./run.sh clean
 
-    event = {
-    "requestContext": {"http": {"method": "POST"}},
-    "isBase64Encoded": False,
-    "body": json.dumps(json.load(open("payload.json","r",encoding="utf-8")))
-    }
-    resp = lambda_handler(event, None)
-    print(json.dumps(resp, ensure_ascii=False))
-    PY
+--- Comandos manuales (si no usas run.sh) ---
 
-Guardar salida a archivo
+Construir imagen Docker:
+    docker build -t reading-pdf-paragraphs .
 
-    python pdf_paragraphs_lambda.py > response.json
+Ejecutar contenedor:
+    docker run -d --name reading-pdf-paragraphs-container -p 9000:8080 reading-pdf-paragraphs
+
+Probar función Lambda:
+    curl -X POST "http://localhost:9000/2015-03-31/functions/function/invocations" \
+         -H "Content-Type: application/json" \
+         --data-binary @payload.json
 
 ========================
 Build y deploy (Docker + ECR + Lambda)
@@ -89,7 +117,6 @@ Build y deploy (Docker + ECR + Lambda)
 El script deploy.sh hace build, push a ECR y update de la Lambda:
 
     sh deploy.sh
-
 
 Cambiar etiqueta (tag):
 
@@ -170,67 +197,84 @@ aws logs describe-log-streams \
 
 Ver eventos de un stream:
 
+    aws logs get-log-events \
+      --log-group-name /aws/lambda/$FUNCTION_NAME \
+      --log-stream-name <STREAM_NAME> --region "$AWS_REGION"
+
+========================
+🧪 TESTING Y DEBUGGING
+========================
+
+📝 Generar tu propio payload:
+
+Si quieres usar tu propio PDF en lugar de sample.pdf:
+
+    # 1. Convertir PDF a base64
+    base64 -i tu_archivo.pdf > pdf.b64
+
+    # 2. Crear payload.json
+    jq -n --arg pdf "$(cat pdf.b64)" --arg pages "1-5" \
+    '{pdf_base64:$pdf, pages:$pages}' > payload.json
+
+    # 3. Probar
+    ./run.sh test
+
+🔍 Ver logs en tiempo real:
+
+    ./run.sh logs
+
+📊 Verificar estado:
+
+    ./run.sh status
+
+🧹 Limpiar y reiniciar:
+
+    ./run.sh clean
+    ./run.sh start
+
+========================
+🔧 TROUBLESHOOTING
+========================
+
+❌ Error "Cannot connect to the Docker daemon"
+   Solución: Iniciar Docker Desktop
+
+❌ Error "Port 9000 already in use"
+   Solución: ./run.sh clean && ./run.sh start
+
+❌ Error durante docker build
+   Solución: Verificar conexión a internet y reintentar
+
+❌ El test devuelve error 500
+   - Verificar que payload.json es válido: jq . payload.json
+   - Verificar logs: ./run.sh logs
+   - Reiniciar: ./run.sh restart
+
+❌ PyMuPDF no se instala localmente
+   Solución: Usar Docker (recomendado): ./run.sh start
+
+📚 Para más ayuda:
+   - Ver logs: ./run.sh logs  
+   - Verificar el Dockerfile
+   - Revisar requirements.txt
+
+========================
+📋 COMANDOS RÁPIDOS
+========================
+
+    # Inicio rápido
+    ./run.sh start && ./run.sh test
+
+    # Ver todo funcionando
+    ./run.sh status && ./run.sh logs
+
+    # Reinicio completo
+    ./run.sh clean && ./run.sh start
+
+    # Ayuda
+    ./run.sh help
+
 aws logs get-log-events \
   --log-group-name /aws/lambda/$FUNCTION_NAME \
   --log-stream-name '<LOG_STREAM_NAME>' \
   --region "$AWS_REGION"
-
-Troubleshooting
-
-Internal Server Error vía API Gateway
-
-Revisa los logs en CloudWatch.
-
-Usa el campo pages (no page_range).
-
-Si invocas Lambda directa con AWS CLI: el evento debe ser un envelope HTTP API v2.
-
-Evita pegar base64 inline en el shell; usa --data-binary @payload.json.
-
-“zsh: argument list too long”
-
-Usa payload.json + --data-binary @payload.json.
-
-Imagen no soportada por Lambda (media type)
-
-La etiqueta que uses en ECR debe ser single-arch y ECR debe mostrar
-application/vnd.oci.image.manifest.v1+json.
-
-Si ves un manifest list, borra esa imagen y vuelve a pushear la single-arch.
-
-Permisos API Gateway → Lambda
-
-Asegúrate de haber agregado el lambda:add-permission con source-arn que
-apunte a tu API_ID y ruta POST /extract_paragraphs.
-
-Timeout / rendimiento
-
-Ajusta memoria/timeout:
-
-aws lambda update-function-configuration \
-  --function-name "$FUNCTION_NAME" \
-  --memory-size 1024 \
-  --timeout 60 \
-  --region "$AWS_REGION"
-
-Limpieza (opcional)
-
-Borrar una imagen/tag en ECR:
-
-aws ecr batch-delete-image \
-  --repository-name "$REPO" \
-  --image-ids imageTag=lambda-v1 \
-  --region "$AWS_REGION"
-
-
-Borrar una API Gateway de prueba:
-
-aws apigatewayv2 delete-api --api-id "$API_ID" --region "$AWS_REGION"
-
-Notas
-
-Mantén el README actualizado si cambian el payload o la ruta del API.
-
-Agrega un .env.example con las variables de entorno que sueles exportar.
-
-Para cada cambio de código: ejecuta sh deploy.sh (o TAG=lambda-vN sh deploy.sh) y vuelve a probar.

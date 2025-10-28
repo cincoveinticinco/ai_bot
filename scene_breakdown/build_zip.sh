@@ -1,7 +1,10 @@
-#!/bin/bash
+# al inicio
+set -euo pipefail
+LAMBDA_NAME="scene_breakdown"
+FILES=("main.py" "prompts" "responses")
 
 echo "🧹 Limpiando archivos anteriores..."
-rm -rf lambda_build question_analysis_lambda.zip
+rm -rf lambda_build "$LAMBDA_NAME.zip"
 
 echo "📁 Creando carpeta lambda_build..."
 mkdir lambda_build
@@ -13,12 +16,13 @@ docker run --rm -v "$PWD":/var/task public.ecr.aws/sam/build-python3.11 \
   -r requirements.txt -t lambda_build
 
 echo "📦 Copiando archivos fuente y recursos..."
-cp analyze_question.py lambda_build/
-cp -r prompts lambda_build/
+for file in "${FILES[@]}"; do
+  cp -r "$file" lambda_build/
+done
 
 echo "🗜️ Generando ZIP..."
 cd lambda_build
-zip -r9 ../question_analysis_lambda.zip .
+zip -r9 ../$LAMBDA_NAME.zip .
 cd ..
 
-echo "✅ ZIP generado: question_analysis_lambda.zip"
+echo "✅ ZIP generado: $LAMBDA_NAME.zip"
