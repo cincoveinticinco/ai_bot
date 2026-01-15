@@ -16,8 +16,13 @@ Campos
 - yr: año si aparece, o "".
 - cast: personajes específicos presentes (type=Character, nombre propio).
 - extras: grupos genéricos (p. ej., ENFERMERAS (2), PÚBLICO).
-- el: elementos explícitamente mencionados, clasificados por categoría (ver “Reglas de Categorías”).
+- el: elementos explícitamente mencionados en la escena, clasificados por categoría.
+  Categorías válidas ver seccione "Reglas Categorías" mas abajo en el texto.
+  Formato: [{"cat":"PROPS","items":["botanas","cócteles"]}, ...]
 - sub_scenes: sub-escenas dentro de la misma escena principal (ver “Reglas de subescenas”).
+  - Solo crea sub_scenes si:
+    * hay un cambio explícito de espacio o tiempo (nuevo lugar físico o flashback) que se deba grabar aparte de la escena actual,
+    * aparece un V.O., O.S., OFF, o INSERT que requiere grabación aparte.
 - synopsis: resumen breve (2–3 líneas) fiel al texto.
 - geo_location: lugar en el mundo que sucede si esta explicito. Ejemplo MIAMI.
 
@@ -37,18 +42,17 @@ Reglas Personajes vs extras:
 
 - Si tiene nombre propio ⇒ cast.
 - Si es genérico ⇒ extras.
-- Si el personaje se mennciona o es una voz en oof o out of screen no va en la escenas. Solo incluyelo si hace parte de la escena.
-- SI el personaje hace parte de la sub-escenas (ejemplo llamda telefónica) no lo incluyas enla escenas principal. Incluyelo en la sub-escena.
+- Si el personaje se mennciona o es una voz en off o out of screen no va en la escenas. Solo incluyelo si hace parte de la escena.
+- SI el personaje hace parte de la sub-escenas (ejemplo llamadada telefónica) no lo incluyas enla escenas principal. Incluyelo en la sub-escena.
 - Cuantificar grupos para extras: POLICIAS (12). Si no hay cantidad solo dejar el nombre.
 
 
 Reglas Sub-Escenas
 
 - Crea sub-escenas numeradas (X.01, X.02, …) con la misma estructura de las escenas que estas creando (scn, i/e, loc, set, d/n, sd, yr, cast, extras, el, synopsis. )cuando la acción ocurre en una locación o set diferente dentro de la misma escena principal.
-- Si un personaje responde desde otro lugar o se describe una acción en otro ambiente, crea una sub-escena, si es una voz en off (V.O) o out screen (O.S) crea el set como "VOZ OFF".
+- Si un personaje responde desde otro lugar o se describe una acción en otro ambiente, crea una sub-escena, si es una voz en off (V.O) o out screen (O.S) crea el set como "VOZ OFF", si se especifica la locación y/o el set utiliza esos.
 - Las sub-escenas no duplican elenco ni elementos de la escena principal, solo van los que hacen parte de la sub escena.
-
-
+- SI la sub escena especifica set, locacion, personajes y elementos incluirlos.
 
 Reglas de Categorías de Elementos
 

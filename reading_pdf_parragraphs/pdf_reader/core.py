@@ -1,6 +1,6 @@
 import fitz  # PyMuPDF
 import math
-from typing import Iterator, Dict, Any, List
+from typing import Iterator, Dict, Any, List, Optional
 import re
 
 _SOFT_HYPHEN = "\u00AD"  # soft hyphen (invisible)
@@ -50,6 +50,7 @@ def iter_pages_lines(pdf_path: str) -> Iterator[Dict[str, Any]]:
                 if block.get("type") != 0:  # solo texto
                     continue
                 for line in block.get("lines", []):
+                    print("LINEA DETECTADA:", line)  # Debug line
                     spans = line.get("spans") or []
                     if not spans:
                         continue
@@ -79,6 +80,7 @@ def iter_pages_lines(pdf_path: str) -> Iterator[Dict[str, Any]]:
                         "end_x": float(end_x),
                         "size": float(s0.get("size", 0)),
                         "font": s0.get("font", ""),
+                        "flags": s0.get("flags", 0),
                         "bbox": bbox,
                     })
 
@@ -152,6 +154,8 @@ def group_lines_to_paragraphs(
             should_break = True
         elif change_line_style:
             should_break = True
+        elif L["flags"] != prev["flags"]:
+            should_break = True
 
         if should_break:
             paragraphs.append(cur)
@@ -224,7 +228,7 @@ def _clean_line_text(t: str) -> str:
     t = re.sub(r"\s+", " ", t).strip()
     return t
 
-def _is_horizontal_dir(direction: tuple | None, tol_deg: float = 2.0) -> bool:
+def _is_horizontal_dir(direction: Optional[tuple], tol_deg: float = 2.0) -> bool:
     """
     Devuelve True si el vector de dirección (dx, dy) indica texto horizontal.
     Considera horizontales los ángulos cercanos a 0° o 180° dentro de una tolerancia.
