@@ -50,7 +50,7 @@ def iter_pages_lines(pdf_path: str) -> Iterator[Dict[str, Any]]:
                 if block.get("type") != 0:  # solo texto
                     continue
                 for line in block.get("lines", []):
-                    print("LINEA DETECTADA:", line)  # Debug line
+                    # print("LINEA DETECTADA:", line)  # Debug line
                     spans = line.get("spans") or []
                     if not spans:
                         continue
@@ -63,7 +63,7 @@ def iter_pages_lines(pdf_path: str) -> Iterator[Dict[str, Any]]:
                     text = _clean_line_text(text)  # limpia NBSP, invisibles, soft hyphen, espacios
                     
                     bbox = line.get("bbox") or spans[0].get("bbox")
-                    origin_x, origin_y, end_x = bbox[0], bbox[1], bbox[2]
+                    origin_x, origin_y, end_x, end_y = bbox[0], bbox[1], bbox[2], bbox[3]
                    
                     if not text or float(origin_y) < 50 or float(origin_y) > (page_height - 50):
                         # if text:
@@ -78,6 +78,7 @@ def iter_pages_lines(pdf_path: str) -> Iterator[Dict[str, Any]]:
                         "origin_x": float(origin_x),
                         "origin_y": float(origin_y),
                         "end_x": float(end_x),
+                        "end_y": float(end_y),
                         "size": float(s0.get("size", 0)),
                         "font": s0.get("font", ""),
                         "flags": s0.get("flags", 0),

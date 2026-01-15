@@ -167,7 +167,7 @@ class DummyHeuristicClassifier:
             #    a) si matchea INT/EXT flexible con número opcional
             #    b) o si trae ' - ' / ' — ' y un token de tiempo del día
             #    c) y además respeta la X típica: ~55 si empieza con número, ~108 si no
-            elif _RE_SCENE_FLEX.match(t) or _RE_SCENE_DASH_TOD.search(t):
+            elif _RE_SCENE_FLEX.match(t) or _RE_SCENE_DASH_TOD.search(t) or re.search(r"\bOMITTED\b", t, re.IGNORECASE):
                 starts_with_num = bool(re.match(r"^\s*\d+[A-Z]?\.?", t))
                 target = 55.0 if starts_with_num else 108.0
                 if _close_to(x, target):
@@ -197,11 +197,21 @@ class DummyHeuristicClassifier:
                         label, proba = "Action", 0.7
                 else:
                     label, proba = "Action", 0.7
+
             # 8) End of Act — SOLO si nada anterior aplicó
             elif _is_centered(p) and _looks_all_caps(t):
                 label, proba = "End of Act", 0.88
+            # 9) NUMBER: entero, decimal, o entero + letra (p.ej. 3A)
+            elif (
+                re.fullmatch(
+                    r"\d+",
+                    (t_num := re.sub(r"[\s\u00a0\u200b\u200c\u200d\ufeff]+", "", t)),
+                )                               # 123 (incluye espacios/NBSP/ZWSP invisibles)
+                or re.fullmatch(r"\d+\.\d+", t_num)          # 12.34
+                or re.fullmatch(r"\d+[A-Za-z]", t_num)       # 3A, 12B
+            ):
+                label, proba = "Number", 0.9
             else:
-
                 label, proba = "Other", 0.5
 
             idx = self.index.get(label, self.index.get("Other", 0))
